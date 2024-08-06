@@ -1,0 +1,33 @@
+services:
+  db:
+    image: postgres:latest
+    restart: unless-stopped
+    ports:
+      - ${WS_DATABASE_PORT:-5432}:5432
+    environment:
+      POSTGRES_USER: ${WS_DATABASE_USER:-postgres}
+      POSTGRES_PASSWORD: ${WS_DATABASE_PASSWORD:-postgres}
+      POSTGRES_DB: ${WS_DATABASE_NAME:-websocket}
+    volumes:
+      - db:/var/lib/postgresql/data
+  
+  pg-admin:
+    image: dpage/pgadmin4:latest
+    restart: unless-stopped
+    depends_on:
+      - db
+    ports:
+      - 8081:80
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com # can be anything
+      PGADMIN_DEFAULT_PASSWORD: password # can be anything
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    
+
+
+volumes: # volumes are used to persist data
+  db:
+    driver: local # they are stored in the host machine
+  pgadmin:
+    driver: local

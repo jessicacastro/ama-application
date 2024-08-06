@@ -1,0 +1,15 @@
+version: "2"
+sql:
+  - engine: "postgresql"
+    queries: "./queries"
+    schema: "./migrations"
+    gen:
+      go:
+        out: "." # output directory for generated code
+        package: "pgstore" # package name
+        sql_package: "pgx/v5" # same creator of tern
+        overrides:
+          - db_type: "uuid" # override the default type for the uuid column for the table with google uuid
+            go_type:
+              import: "github.com/google/uuid"
+              type: "UUID"
